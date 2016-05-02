@@ -12,6 +12,7 @@ author: Shih-Chi
 import numpy as np
 from matplotlib import dates     #繪圖時的時間處理
 from pylab import *              #matplotlib 接口
+import os                        #資料夾
 
 #計算單一值
 def cal(water, rain, window, lag):
@@ -43,9 +44,9 @@ def cal_mat(water, rain, window, lag):
     return (r, max_index)
 
 #出圖
-def printpng(site_w, site_P, r, max_index, water, rain, time_P, lag, window, length, TR, layer):
+def printpng(site_w, site_P, r, max_index, water, rain, time_P, lag, window, length, TR, layer, ROOT):
     fig = figure(figsize=(12, 8), dpi=300)
-
+    
     #fig.1 time window & lag
     subplot(4, 1, 1)
     pc1 = pcolor(r, vmin=-1, vmax=1)
@@ -128,7 +129,11 @@ def printpng(site_w, site_P, r, max_index, water, rain, time_P, lag, window, len
     legend()
 
     fig.tight_layout()
-    fig.savefig("../result/{S}_{E}/layer{layer}/{site_w}_{site_P}.png".format(site_w = site_w,site_P = site_P, S=str(TR[0]), E=(TR[1]), layer = layer), dpi=200, bbox_inches='tight')
+    
+    fig.savefig(os.path.join(ROOT, '{site_w}_{site_P}.png'.format(site_w = site_w,site_P = site_P)), dpi=200, bbox_inches='tight')
+    #fig.savefig("../result/{S}_{E}/layer{layer}/{site_w}_{site_P}.png".format(site_w = site_w,site_P = site_P, S=str(TR[0]), E=(TR[1]), layer = layer), dpi=200, bbox_inches='tight')
+    
+    close('all')
     return '{site_w} {site_P} cal and save png [OK]'.format(site_w = site_w,site_P = site_P)
 
 class where_max:
@@ -138,5 +143,5 @@ class where_max:
         self.max_r = max_r
         
     def __str__(self):
-        return '({0}, {1}, {2})'.format(self.window, self.lag, self.max_r)
+        return '{0}, {1}, {2}'.format(self.window, self.lag, self.max_r)
         
